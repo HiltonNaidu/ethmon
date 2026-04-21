@@ -1,0 +1,112 @@
+# ─────────────────────────────────────────────────────────────────────────────
+# config.yaml — LAN Device Manager
+#
+# All user-facing settings live here. No need to touch source code.
+# Copy this file, adjust the values, and point the app at it via:
+#   LAN_MANAGER_CONFIG=/path/to/your/config.yaml
+# ─────────────────────────────────────────────────────────────────────────────
+
+
+# ── Network ───────────────────────────────────────────────────────────────────
+network:
+  # The network interface the app should bind/listen on.
+  # Use "0.0.0.0" to bind on all available interfaces.
+  interface: "0.0.0.0"
+
+  # Broadcast address for WoL magic packets.
+  # "255.255.255.255" works for most single-subnet home networks.
+  # Use a directed broadcast (e.g. "192.168.1.255") if you need to reach
+  # devices across subnets or if global broadcast is blocked by your router.
+  broadcast_ip: "255.255.255.255"
+
+  # Subnet to scan for devices (CIDR notation).
+  # Example: "192.168.1.0/24" covers 192.168.1.1 – 192.168.1.254
+  subnet: "192.168.1.0/24"
+
+
+# ── Wake-on-LAN ───────────────────────────────────────────────────────────────
+wol:
+  # UDP port to broadcast magic packets on. Port 9 is the WoL standard.
+  # Port 7 is also widely supported if 9 is blocked on your network.
+  port: 9
+
+  # How many times to send the magic packet per wake request.
+  # Sending more than once improves reliability on lossy networks.
+  # 1–3 is reasonable; beyond that provides diminishing returns.
+  repeat: 1
+
+  # Seconds between repeated sends (only relevant if repeat > 1).
+  repeat_interval_seconds: 0.5
+
+  # Whether to attempt to verify the device came online after waking.
+  verify_wake: false
+
+  # How long (seconds) to wait for the device to respond after waking.
+  # Only used when verify_wake is true.
+  verify_timeout_seconds: 60
+
+  # How often (seconds) to ping while waiting for the device to come up.
+  verify_interval_seconds: 5
+
+
+# ── Network Scanner ───────────────────────────────────────────────────────────
+scanner:
+  # Whether to run background scanning at all.
+  enabled: true
+
+  # How often (seconds) the scanner polls the network for device status.
+  # 30s is a reasonable default; lower values increase network noise.
+  interval_seconds: 30
+
+  # Scanning method: "arp" (faster, requires root) or "ping" (no root needed).
+  method: "arp"
+
+  # Seconds before a device is considered unreachable during a scan.
+  timeout_seconds: 2
+
+  # Number of parallel threads/workers used when scanning.
+  # Higher = faster scans, more network load.
+  workers: 50
+
+
+# ── Device Registry ───────────────────────────────────────────────────────────
+registry:
+  # Backend storage driver: "sqlite" or "json"
+  # Use "json" for zero-dependency setups; "sqlite" for better querying.
+  backend: "sqlite"
+
+  # Path to the SQLite database file (used when backend is "sqlite").
+  sqlite_path: "data/devices.db"
+
+  # Path to the JSON device file (used when backend is "json").
+  json_path: "data/devices.json"
+
+
+# ── API Server ────────────────────────────────────────────────────────────────
+api:
+  # Host the API server listens on.
+  host: "0.0.0.0"
+
+  # Port the API server listens on.
+  port: 8000
+
+  # Enable automatic interactive API docs at /docs (Swagger UI).
+  docs_enabled: true
+
+  # Allowed origins for CORS (useful if your UI is served separately).
+  # Use ["*"] to allow all, or list specific origins.
+  cors_origins:
+    - "http://localhost:3000"
+    - "http://localhost:5173"
+
+
+# ── Logging ───────────────────────────────────────────────────────────────────
+logging:
+  # Log level: DEBUG | INFO | WARNING | ERROR | CRITICAL
+  level: "INFO"
+
+  # Log output format: "text" (human readable) or "json" (structured, good for log aggregators).
+  format: "text"
+
+  # Optional path to write logs to a file. Leave empty to log to stdout only.
+  file_path: ""
