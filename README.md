@@ -1,5 +1,8 @@
-# ether-monitor
+# ether-monitor - Ethernet monitor 
 a module focused on the management and WoL of multiple devices on an network 
+
+## Scope 
+currently limited to wake on lan for multiple devices, will be expanded into more areas
 
 ## Usage 
 ethmon [macaddress, allias]                 --> lists any avaliable infomation, and pings to check activity 
