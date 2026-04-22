@@ -191,3 +191,9 @@ def _ping(host: str) -> bool:
         Stub — implement with `ping3.ping()` or subprocess `ping`.
     """
     raise NotImplementedError
+
+if __name__ == "__main__":
+    # Simple test to verify WoL is working
+    test_mac = "AA:BB:CC:DD:EE:FF"
+    result = send_magic_packet(test_mac)
+    print(f"WoL result for {test_mac}: {result.success} - {result.message}")
